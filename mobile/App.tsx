@@ -1,20 +1,33 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from 'react-native';
+import {
+  useFonts,
+  Roboto_400Regular,
+  Roboto_500Medium,
+  Roboto_700Bold,
+  Roboto_900Black
+} from '@expo-google-fonts/roboto'
+
+import { Home } from './src/pages/Home';
+import { Background } from './src/components/Background';
+import { Loading } from './src/components/Loading';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>GG Match</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  const [fontsLoader] = useFonts({
+    Roboto_400Regular,
+    Roboto_500Medium,
+    Roboto_700Bold,
+    Roboto_900Black
+  });
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  return (
+    <Background >
+      <StatusBar 
+        barStyle={"light-content"}
+        backgroundColor={"transparent"}
+        translucent
+        />
+
+        { fontsLoader ? <Home /> : <Loading /> }
+    </Background>
+  );
+};
