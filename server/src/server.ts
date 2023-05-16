@@ -1,15 +1,103 @@
-import express from 'express';
+import express, { request } from 'express';
+import cors from 'cors';
+
+import { PrismaClient } from '@prisma/client'
+import { convertMinutesToHours } from './utils/convert-minutes-string-hours';
 
 const app = express();
 
-app.get('/groups', (request, response) => {
-    return response.json([
-        {id:1, name:'group1', game:'cod', host:'tata42'},
-        {id:2, name:'group2', game:'lol', host:'manko'},
-        {id:3, name:'group3', game:'brawl stars', host:'inimigor'},
-        {id:4, name:'group4', game:'cs', host:'gaules'},
-        {id:5, name:'group5', game:'fifa', host:'lira'},
-    ]);
+app.use(express.json());
+app.use(cors());
+
+const prisma = new PrismaClient();
+
+
+//listar jogos
+app.get('/games', async (request, response) => {
+    const games = await prisma.game.findMany({
+        orderBy: {
+            title: 'asc',
+          },
+          include:{
+            _count:{
+                select: {
+                    groups: true,
+                }
+            }
+          }
+    })
+
+    return response.json([games]);
+})
+
+//criar grupo
+app.post('/games/:id/groups', async(request, response) => {
+    const gameId = request.params.id;
+    const body = request.body;
+
+    const group = await prisma.group.create({
+        data:{
+            gameId,
+            name: body.name,
+            discord: body.discord,
+            hourInit: body.hourInit,
+            hourEnd: body.hourEnd,
+            gameDays: body.gameDays.join(','),
+            useMicrophone:  body.useMicrophone,
+        }
+    })
+
+
+    return response.status(201).json(group);
+})
+
+//listar grupos para jogo especifico
+app.get('/games/:id/groups', async (request, response) => {
+    const gameId = request.params.id;
+
+    const  groups = await prisma.group.findMany({
+        select:{
+            id: true,
+            name: true,
+            gameDays: true,
+            useMicrophone: true,
+            hourInit: true,
+            hourEnd: true,
+        },
+        where:{ 
+            gameId,
+        },
+        orderBy:{
+            createdDate: 'desc',
+        }
+    })
+    return response.json(groups.map(group => {
+        return {
+            ...group,
+            gameDays: group.gameDays.split(','),
+            hourInit:convertMinutesToHours(group.hourInit),
+            hourEnd: convertMinutesToHours(group.hourEnd),
+        }
+    }))
 });
+  
+//listar discord from user
+app.get('/groups/:id/discord', async(request, response) => {
+    const groupId = request.params.id;
+    
+    const group = await prisma.group.findUniqueOrThrow({
+        select:{
+            discord:true,
+        },
+        where:{
+            id: groupId,
+        }
+    })
+
+    return response.json({
+        discord: group.discord,
+    });
+   });
+
 
 app.listen(3333);
