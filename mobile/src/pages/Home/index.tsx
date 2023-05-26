@@ -1,6 +1,6 @@
 import { View, Image,Text,FlatList } from 'react-native';
 
-import logoGG from '../../assets/logo-nlw-esports.png';
+import logoGG from '../../assets/logo-gg.png';
 
 import { styles } from './styles';
 import { Header } from '../../components/Header';
