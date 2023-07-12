@@ -6,14 +6,24 @@ import { Card } from './components/Card';
 import { CreateGroupAd } from './components/CreateGroupAd';
 
 
+interface Card {
+  id: string;
+  title: string;
+  bannerUrl: string;
+  _count: {
+    groups: number;
+  }
+
+}
+
 function App() {
-  const [games, setGames] = useState([]);
+  const [cards, setCards] = useState<Card[]>([]);
 
   useEffect(()=>{
     fetch('http://localhost:3333/games')
     .then(response => response.json())
     .then(data => {
-      console.log(data);
+      setCards(data);
     })
   },[])
 
@@ -26,11 +36,20 @@ function App() {
     </h1>
 
     <div className='grid grid-cols-6 gap-6 mt-16'>
-      <Card 
-       imageUrl='/lol.png'
-       title='League of Legends'
-       groupsCount={1} 
-      />
+
+      {
+        cards.map(card => {
+          return(
+            <Card 
+            key={card.id}
+            title={card.title}
+            imageUrl={card.bannerUrl}
+            groupsCount={card._count.groups}
+           />
+          )
+        })
+      }
+
 
     </div>
    

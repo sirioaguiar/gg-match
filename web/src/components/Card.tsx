@@ -14,5 +14,6 @@ export function Card(props :CardProps){
           <span className='text-sm block mt-1'>{props.groupsCount} grupo(s)</span>
         </div>
       </a>
+      
     )
 }
