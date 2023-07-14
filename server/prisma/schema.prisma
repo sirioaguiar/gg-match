@@ -17,7 +17,6 @@ model Game {
 
 model Group {
   id            String   @id @default(uuid())
-  gameId        String
   name          String
   discord       String
   gameDays      String
@@ -27,4 +26,5 @@ model Group {
   createdDate   DateTime @default(now())
 
   game Game @relation(fields: [gameId], references: [id])
+  gameId        String
 }

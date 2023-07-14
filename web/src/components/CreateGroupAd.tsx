@@ -1,4 +1,5 @@
 import { UsersThree } from 'phosphor-react';
+import * as Dialog  from '@radix-ui/react-dialog'
 
 export function CreateGroupAd(){
     return (
@@ -8,10 +9,10 @@ export function CreateGroupAd(){
           <span className='block'>Crie um grupo e vamos jogar.</span>
         </div>
   
-        <button className='py-3 px-4 bg-fuchsia-900 hover:bg-fuchsia-600 rounded-md flex items-center gap-2'>
+        <Dialog.Trigger className='py-3 px-4 bg-fuchsia-900 hover:bg-fuchsia-600 rounded-md flex items-center gap-2'>
           <UsersThree size={24}/>
           Criar grupo
-        </button>
+        </Dialog.Trigger>
       </div>
     )
 }
