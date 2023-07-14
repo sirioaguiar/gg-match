@@ -4,9 +4,11 @@ import { styles } from './styles';
 
 export interface CardProps {
     id:string;
-    name:string;
-    groups: string;
-    cover: ImageSourcePropType;
+    title:string;
+    _count : {
+       groups: number;
+      };
+    imageUrl: string;
 }
 
 interface Props extends TouchableOpacityProps{
@@ -15,16 +17,16 @@ interface Props extends TouchableOpacityProps{
 
 export function Card( { data, ...rest }:Props) {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} {...rest}>
         <ImageBackground
             style={styles.cover}
-            source={data.cover}
+            source={{uri: data.imageUrl}}
             >
             <Text style={styles.name}>
-              {data.name}
+              {data.title}
             </Text>
             <Text style={styles.groups}>
-              {data.groups} grupos
+              {data._count.groups} grupos
             </Text>
           </ImageBackground>
 

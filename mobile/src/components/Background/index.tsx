@@ -1,5 +1,5 @@
 import { ImageBackground } from 'react-native';
-import backgroundImage from '../../assets/background-galaxy.png';
+import backgroundImage from '../../assets/background.png';
 
 
 import { styles } from './styles';

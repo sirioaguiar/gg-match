@@ -7,7 +7,7 @@ import {
   Roboto_900Black
 } from '@expo-google-fonts/roboto'
 
-import { Home } from './src/pages/Home';
+import { Routes } from './src/routes/';
 import { Background } from './src/components/Background';
 import { Loading } from './src/components/Loading';
 
@@ -27,7 +27,7 @@ export default function App() {
         translucent
         />
 
-        { fontsLoader ? <Home /> : <Loading /> }
+        { fontsLoader ? <Routes /> : <Loading /> }
     </Background>
   );
 };
