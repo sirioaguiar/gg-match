@@ -28,7 +28,7 @@ export function GroupList() {
   }
   
   useEffect(() => {
-    fetch(`http://192.168.25.9:3333/games/${group.id}/groups`)
+    fetch(`http://172.16.14.193:3333/games/${group.id}/groups`)
     .then(response => response.json())
     .then(data=> setGroups(data));
   },[]);

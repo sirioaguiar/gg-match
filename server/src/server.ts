@@ -3,6 +3,7 @@ import cors from 'cors';
 
 import { PrismaClient } from '@prisma/client'
 import { convertMinutesToHours } from './utils/convert-minutes-string-hours';
+import { convertHoursToMinutes } from './utils/convert-hours-string-minutes';
 
 const app = express();
 
@@ -40,8 +41,8 @@ app.post('/games/:id/groups', async(request, response) => {
             gameId,
             name: body.name,
             discord: body.discord,
-            hourInit: body.hourInit,
-            hourEnd: body.hourEnd,
+            hourInit: convertHoursToMinutes(body.hourInit),
+            hourEnd: convertHoursToMinutes(body.hourEnd),
             gameDays: body.gameDays.join(','),
             useMicrophone:  body.useMicrophone,
         }
