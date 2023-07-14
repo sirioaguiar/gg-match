@@ -13,10 +13,12 @@ import {THEME} from '../../theme';
 import { Background } from '../../components/Background';
 import { Header } from '../../components/Header';
 import { Group,GroupProps } from '../../components/Group';
+import { GroupModal } from '../../components/GroupModal';
 
 
 export function GroupList() {
   const [groups, setGroups] = useState<GroupProps[]>([]);
+  const [discordGroupSelected, setDiscordGroupSelected] = useState('');
 
 
   const navigation = useNavigation();
@@ -27,10 +29,18 @@ export function GroupList() {
     navigation.goBack();
   }
   
+ async function getDiscord(groupId: string){
+    fetch(`http://172.16.14.193:3333/groups/${groupId}/discord`)
+    .then(response => response.json())
+    .then(data => setDiscordGroupSelected(data.discord));
+  };
+
+
+
   useEffect(() => {
     fetch(`http://172.16.14.193:3333/games/${group.id}/groups`)
     .then(response => response.json())
-    .then(data=> setGroups(data));
+    .then(data => setGroups(data));
   },[]);
 
   return (
@@ -69,7 +79,7 @@ export function GroupList() {
           renderItem={({ item}) => (
             <Group 
             data={item}
-            onEnterGroup={()=>{}}
+            onEnterGroup={()=>getDiscord(item.id)}
             />
             )}
             horizontal
@@ -79,7 +89,12 @@ export function GroupList() {
             ListEmptyComponent={()=>(
             <Text style={styles.emptyListText}>Não há grupos para este jogo ainda</Text>)}
           />
+        <GroupModal
+        visible={discordGroupSelected.length > 0} 
+        discord={discordGroupSelected}
+        onClose={() => setDiscordGroupSelected('') }
 
+        />
 
       </SafeAreaView>
     </Background>
