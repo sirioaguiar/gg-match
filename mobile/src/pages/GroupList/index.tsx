@@ -30,7 +30,7 @@ export function GroupList() {
   }
   
  async function getDiscord(groupId: string){
-    fetch(`http://172.16.14.193:3333/groups/${groupId}/discord`)
+    fetch(`http://192.168.25.12:3333/groups/${groupId}/discord`)
     .then(response => response.json())
     .then(data => setDiscordGroupSelected(data.discord));
   };
@@ -38,7 +38,7 @@ export function GroupList() {
 
 
   useEffect(() => {
-    fetch(`http://172.16.14.193:3333/games/${group.id}/groups`)
+    fetch(`http://192.168.25.12:3333/games/${group.id}/groups`)
     .then(response => response.json())
     .then(data => setGroups(data));
   },[]);

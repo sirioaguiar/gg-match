@@ -13,7 +13,7 @@ app.use(cors());
 const prisma = new PrismaClient();
 
 
-//listar jogos
+//criar jogo
 app.get('/games', async (request, response) => {
     const games = await prisma.game.findMany({
         orderBy: {
@@ -29,6 +29,18 @@ app.get('/games', async (request, response) => {
     })
 
     return response.json(games);
+})
+
+app.post('/games', async(request, response) => {
+    const body = request.body;
+
+    const game = await prisma.game.create({
+        data:{
+            title: body.title,
+            imageUrl: body.imageUrl,
+        }
+    })
+    return response.status(201).json(game);
 })
 
 //criar grupo
