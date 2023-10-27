@@ -30,7 +30,11 @@ export function GroupList() {
   }
   
  async function getDiscord(groupId: string){
+<<<<<<< HEAD
     fetch(`http://192.168.25.9:3333/groups/${groupId}/discord`)
+=======
+    fetch(`http://192.168.25.12:3333/groups/${groupId}/discord`)
+>>>>>>> 077626b1c9677d0a547e9f3cf5e13629a1b5ece6
     .then(response => response.json())
     .then(data => setDiscordGroupSelected(data.discord));
   };
@@ -38,7 +42,11 @@ export function GroupList() {
 
 
   useEffect(() => {
+<<<<<<< HEAD
     fetch(`http://192.168.25.9:3333/games/${group.id}/groups`)
+=======
+    fetch(`http://192.168.25.12:3333/games/${group.id}/groups`)
+>>>>>>> 077626b1c9677d0a547e9f3cf5e13629a1b5ece6
     .then(response => response.json())
     .then(data => setGroups(data));
   },[]);
