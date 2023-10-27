@@ -5,8 +5,10 @@ import * as Dialog from '@radix-ui/react-dialog';
 import logoImg from './assets/logoGG.png';
 import { Card } from './components/Card';
 import { CreateGroupAd } from './components/CreateGroupAd';
+import { CreateGameAd } from './components/CreateGameAd';
 import { CreateGroupModal } from './components/CreateGroupModal';
 import axios from 'axios';
+import { CreateGameModal } from './components/CreateGameModal';
 
 
 
@@ -55,11 +57,18 @@ function App() {
 
     </div>
    
+    <Dialog.Root>
+    <CreateGameModal />  
+    <CreateGameAd />
+    </Dialog.Root>
+
    <Dialog.Root>
     <CreateGroupModal />
-
-     <CreateGroupAd />
+    <CreateGroupAd />
     </Dialog.Root>
+
+
+
    </div>
 )
 }                                                                                                                                                                                                                                       
