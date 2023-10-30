@@ -11,7 +11,7 @@ export function CreateGroupAd(){
   
         <Dialog.Trigger className='py-3 px-4 bg-fuchsia-900 hover:bg-fuchsia-600 rounded-md flex items-center gap-2'>
           <UsersThree size={24}/>
-          Criar grupo
+          Cadastrar grupo
         </Dialog.Trigger>
 
       </div>

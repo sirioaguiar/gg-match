@@ -1,7 +1,7 @@
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Checkbox from '@radix-ui/react-checkbox';
-import { GameController, Check } from 'phosphor-react';
+import { UsersThree, Check } from 'phosphor-react';
 import { Input } from './Form/Input';
 import { FormEvent, useEffect,useState } from 'react';
 
@@ -175,8 +175,8 @@ export function CreateGroupModal(){
               className='bg-fuchsia-900 hover:bg-fuchsia-600  px-5 h-12 rounded-md font-semibold flex items-center gap-2' 
               type='submit'
             >
-              <GameController size={24}/>
-              Encontrar grupo
+              <UsersThree size={24}/>
+              Criar grupo
               </button>
           </footer>
         </form>

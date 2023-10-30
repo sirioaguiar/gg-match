@@ -1,6 +1,7 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { Input } from './Form/Input';
 import { FormEvent } from 'react';
+import { GameController} from 'phosphor-react';
 
 import axios from 'axios';
 
@@ -45,7 +46,16 @@ export function CreateGameModal(){
               />
             </div>
           </div>
-
+          <footer className=' mt-4 flex justify-end gap-4'>
+            <Dialog.Close type='button' className='bg-zinc-500 px-5 h-12 rounded-md font-semibold hover:bg-zinc-600'>Cancelar</Dialog.Close>
+            <button 
+              className='bg-fuchsia-900 hover:bg-fuchsia-600  px-5 h-12 rounded-md font-semibold flex items-center gap-2' 
+              type='submit'
+            >
+              <GameController size={24}/>
+              Cadastrar jogo
+              </button>
+          </footer>
         </form>
 
     </Dialog.Content>
