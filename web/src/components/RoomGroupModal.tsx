@@ -21,17 +21,17 @@ export function RoomGroupModal(props :RoomGroupModalProps){
     await axios.post(`http://localhost:3333/group/post/create`,{
       text: data.text,
       groupId: data.groupId,
-      ownerId: data.ownerId
+      ownerId: data.ownerId,
+      hourInit: data.hourInit,
+      hourEnd: data.hourEnd
     }).then(response => {
         const post = response.data;
-         //props.setPlayer(player);
          console.log(post)
          formEventGroup.reset()
     })
     
   } catch(err){
     console.log(err);
-    //props.setPlayer(undefined);
     alert('Erro ao tentar logar!')
   }
 }
@@ -67,6 +67,8 @@ export function RoomGroupModal(props :RoomGroupModalProps){
               <p className='card-text'><span className="h6">Game: </span>{groupCard.game.title}</p>
               <p className='card-text'><span className="h6">Players: </span>{groupCard.totalPlayersOnline+" / "+groupCard.maxPlayers}</p>
               <p className='card-text'><span className="h6">Owner: </span>{groupCard.owner.name}</p>
+              <p className='card-text'><span className="h6">Hora Ínicio: </span>{groupCard.hourInit}</p>
+              <p className='card-text'><span className="h6">Hora Fim: </span>{groupCard.hourEnd}</p>
               <p className='card-text mt-3 mb-3'><span className="h6">Dias de Jogos: </span></p>
               <ToggleGroup.Root 
               type='multiple' 
@@ -117,7 +119,12 @@ export function RoomGroupModal(props :RoomGroupModalProps){
                   S
                   </ToggleGroup.Item>
                 </ToggleGroup.Root>
-                <p className={"card-text "+groupCard.mediaRatingStars}><span className="h6">Avaliação: </span><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
+                <p className={"card-text "+groupCard.mediaRatingStars}><span className="h6">Avaliação: </span></p>
+                <p className={"card-text "+groupCard.mediaRatingStars}><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
+                <p className={"card-text "+groupCard.mediaRatingStars}><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
+                <p className={"card-text "+groupCard.mediaRatingStars}><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
+                <p className={"card-text "+groupCard.mediaRatingStars}><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
+                <p className={"card-text "+groupCard.mediaRatingStars}><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>          
               </div>    
           </div>
           <div className='col-6'>            
@@ -125,7 +132,12 @@ export function RoomGroupModal(props :RoomGroupModalProps){
             <div className='card-body pl-1'>
               <p className='card-text'><span className="h6">Nome: </span>{groupCard.owner.name}</p>
               <p className='card-text'><span className="h6">Username: </span>{groupCard.owner.username}</p>
-              <p className={"my-2 card-text "+groupCard.mediaRatingStars}><span className="h6">Avaliação: </span><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
+              <p className={"my-2 card-text "+groupCard.mediaRatingStars}><span className="h6">Avaliação: </span></p>
+              <p className={"my-2 card-text "+groupCard.mediaRatingStars}><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
+              <p className={"my-2 card-text "+groupCard.mediaRatingStars}><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
+              <p className={"my-2 card-text "+groupCard.mediaRatingStars}><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
+              <p className={"my-2 card-text "+groupCard.mediaRatingStars}><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
+              <p className={"my-2 card-text "+groupCard.mediaRatingStars}><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
             </div>
             <h3 className='card-title h5 mt-3 mb-0 text-left'>Adicionar Post ao Feed</h3>
             <form onSubmit={handlePostCreate} className='mt-3 flex flex-col gap-3'>
