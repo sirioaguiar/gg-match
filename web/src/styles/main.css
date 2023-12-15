@@ -25,6 +25,7 @@ p i.bi{
 
 .cardGame{
     cursor: pointer;
+    max-width: 280px;
 }
 
 .cardGame:hover{
