@@ -7,16 +7,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Game {
-  id       String @id @default(uuid())
-  title    String
-  imageUrl String
+model Player {
+  id       Int     @id @default(autoincrement())
+  name     String
+  username String  @unique
+  password String
+  groups   Group[]
+  posts    Post[]
+}
 
-  groups Group[]
+model Game {
+  id       Int     @id @default(autoincrement())
+  title    String  @unique
+  imageUrl String
+  groups   Group[]
 }
 
 model Group {
-  id            String   @id @default(uuid())
+  id            Int      @id @default(autoincrement())
   name          String
   discord       String
   gameDays      String
@@ -24,7 +32,22 @@ model Group {
   hourEnd       Int
   useMicrophone Boolean
   createdDate   DateTime @default(now())
+  ratingStars   String
+  game          Game     @relation(fields: [gameId], references: [id])
+  gameId        Int
+  owner         Player   @relation(fields: [ownerId], references: [id])
+  ownerId       Int
+  posts         Post[]
+  players       String   @default("")
+  maxPlayers    Int      @default(10)
+}
 
-  game Game @relation(fields: [gameId], references: [id])
-  gameId        String
+model Post {
+  id          Int      @id @default(autoincrement())
+  text        String
+  createdDate DateTime @default(now())
+  group       Group    @relation(fields: [groupId], references: [id])
+  groupId     Int
+  owner       Player   @relation(fields: [ownerId], references: [id])
+  ownerId     Int
 }

@@ -5,13 +5,19 @@
   "main": "src/server.ts",
   "scripts": {
     "build": "tsc",
+    "prismaDev": "prisma migrate dev",
+    "prismaDevCreateOnly": "prisma migrate dev --create-only",
+    "prismaFormat": "prisma format",
+    "prismaPush": "prisma db push",
+    "prismaGen": "prisma generate",
+    "prismaSeed": "ts-node src/database/seed.ts",
     "dev": "tsnd --exit-child src/server.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.0.0",
+    "@prisma/client": "^5.5.2",
     "cors": "^2.8.5",
     "express": "^4.18.2"
   },
