@@ -44,6 +44,19 @@ app.post('/games', async(request, response) => {
     return response.status(201).json(game);
 })
 
+app.post('/group/post/create', async(request, response) => {
+    const body = request.body;
+
+    const post = await prisma.post.create({
+        data:{
+            text: body.text,
+            ownerId: parseInt(body.ownerId),
+            groupId: parseInt(body.groupId)
+        }
+    })
+    return response.status(201).json(post);
+})
+
 app.post('/player/create', async(request, response) => {
     const body = request.body;
     const player = await prisma.player.upsert({

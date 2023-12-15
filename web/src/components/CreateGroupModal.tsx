@@ -1,19 +1,19 @@
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Checkbox from '@radix-ui/react-checkbox';
-import { UsersThree, Check } from 'phosphor-react';
+import { GameController, Check } from 'phosphor-react';
 import { Input } from './Form/Input';
 import { FormEvent, useEffect,useState } from 'react';
+import { GroupCardProps } from '../pages/Home';
 
 import axios from 'axios';
 
 interface Card {
     id: string;
     title: string;
-  }
+}
 
-
-export function CreateGroupModal(){
+export function CreateGroupModal(props :GroupCardProps){
     const [games, setGames] = useState<Card[]>([]);
     const [gameDays, setGameDays] = useState<string[]>([]);
     const [useMicrophone, setUseMicrophone] = useState(false);
@@ -26,24 +26,32 @@ export function CreateGroupModal(){
 
       const handleCreateGroup = async (event: FormEvent) =>{
         event.preventDefault();
-
+        const formFireEvent = event.target as HTMLFormElement;
         const formData = new FormData(event.target as HTMLFormElement)
+        //console.log(event.target)
         const data = Object.fromEntries(formData);
 
        try{ 
-        await axios.post(`http://localhost:3333/games/${data.game}/groups`,{
-          name : data.name,
-          discord: data.discord,
-          hourInit: data.hourInit,
-          hourEnd: data.hourEnd,
-          gameDays: gameDays.map(Number),
-          useMicrophone: useMicrophone
-        })
-        alert('Anúncio criado com sucesso!')
-      } catch(err){
-        console.log(err);
-        alert('Erro ao criar anúncio!')
-      }
+          await axios.post(`http://localhost:3333/games/${data.game}/groups`,{
+            name : data.name,
+            discord: data.discord,
+            hourInit: data.hourInit,
+            hourEnd: data.hourEnd,
+            gameDays: gameDays.map(Number),
+            useMicrophone: useMicrophone,
+            ownerId: props.playerLogado?.id,
+            maxPlayers: data.maxPlayers
+          }).then(response => {
+              props.setReloadCards(true)
+              formFireEvent.reset();
+              const btnClose = document.getElementById('btnCloseGroupModal')
+              if(btnClose) btnClose.click()
+          })
+          alert('Grupo criado com sucesso!')
+        } catch(err){
+          console.log(err);
+          alert('Erro ao criar Grupo!')
+        }
       }
 
     return(
@@ -53,7 +61,7 @@ export function CreateGroupModal(){
     <Dialog.Content className='fixed bg-[#27272a] py-8 px-10 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg w-[480px] shadow-lg shadow-black/50'>
       <Dialog.Title className='text-3xl font-black'>Crie um grupo</Dialog.Title>
  
-        <form onSubmit={handleCreateGroup} className='mt-8 flex flex-col gap-4'>
+        <form id="formCreateGroup" onSubmit={handleCreateGroup} className='mt-8 flex flex-col gap-4'>
           <div className='flex flex-col gap-2'>
             <label htmlFor='game' className='font-semibold'>Qual o jogo?</label>
               <select
@@ -70,16 +78,19 @@ export function CreateGroupModal(){
           </div>  
 
           <div className='flex flex-col gap-2'>
-            <label htmlFor='name'>Seu nome (ou nickname)</label>
-            <Input id='name' name='name'placeholder='Como te chamam dentro do game' 
+            <label htmlFor='name'>Nome do Grupo</label>
+            <Input id='name' name='name' placeholder='Nome da Sala ( Grupo )' 
               />
           </div>
 
           <div className='grid grid-cols gap-6'>
             <div className='flex flex-col gap-2'>
-              <label htmlFor='discord'>Qual seu Discord?</label>
-              <Input id='discord' name='discord' type='text' placeholder='Usuario#XXXXXX' 
-              />
+              <div className='grid grid-cols-2 gap-2'>
+                <label htmlFor='maxPlayers'>Max. Players</label>
+                <label htmlFor='discord'>Qual seu Discord</label>
+                <Input id='maxPlayers' name='maxPlayers' type='number' placeholder='Padrão: 10'/>
+                <Input id='discord' name='discord' type='text' placeholder='Usuario#XXXXXX'/>
+              </div>
             </div>
           </div>
 
@@ -132,7 +143,7 @@ export function CreateGroupModal(){
                     <ToggleGroup.Item 
                     value='6'                    
                     title='Sábado'
-                    className={` w-8 h-8 rounded-sm  ${gameDays.includes('7') ? 'bg-fuchsia-600' : 'bg-zinc-900'}`}>
+                    className={` w-8 h-8 rounded-sm  ${gameDays.includes('6') ? 'bg-fuchsia-600' : 'bg-zinc-900'}`}>
                     S
                     </ToggleGroup.Item>
                   </ToggleGroup.Root>
@@ -170,13 +181,13 @@ export function CreateGroupModal(){
           </label>
 
           <footer className=' mt-4 flex justify-end gap-4'>
-            <Dialog.Close type='button' className='bg-zinc-500 px-5 h-12 rounded-md font-semibold hover:bg-zinc-600'>Cancelar</Dialog.Close>
+            <Dialog.Close id='btnCloseGroupModal' type='button' className='bg-zinc-500 px-5 h-12 rounded-md font-semibold hover:bg-zinc-600'>Cancelar</Dialog.Close>
             <button 
               className='bg-fuchsia-900 hover:bg-fuchsia-600  px-5 h-12 rounded-md font-semibold flex items-center gap-2' 
               type='submit'
             >
-              <UsersThree size={24}/>
-              Criar grupo
+              <GameController size={24}/>
+              Criar Grupo
               </button>
           </footer>
         </form>
