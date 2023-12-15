@@ -1,6 +1,5 @@
 import { Home } from './pages/Home';
 import './styles/main.css';
-// localStorage.setItem("mykey","myvalue");
 
 function App() {
   
