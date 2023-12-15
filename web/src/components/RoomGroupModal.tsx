@@ -1,15 +1,27 @@
 import * as Dialog from '@radix-ui/react-dialog';
-import { Player, RoomGroupModalProps } from "../pages/Home";
+import { Player, Post, RoomGroupModalProps } from "../pages/Home";
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Input } from './Form/Input';
 
 export function RoomGroupModal(props :RoomGroupModalProps){
   const groupCard = props.groupCard;
   const playerLogado = props.playerLogado;
+  const totalPlayersApp = props.totalPlayersApp;
+  const playersNaSalaArray = groupCard?.players.split(',');
 
+  const [isToPosts, setIsToPosts] = useState(0);
+  const [getPostsOnGroup, setGetPostsOnGroup] = useState<Post[]>([]);
   const [gameDays, setGameDays] = useState<string[]>([]);
+  const [isRespOk, setIsRespOk] = useState(false);
+
+  useEffect(()=>{
+    if(groupCard != null) axios('http://localhost:3333/group/posts/list/'+groupCard.id).then(response => {
+      setGetPostsOnGroup(response.data);
+        //console.log(response.data);
+    })
+  },[groupCard, isToPosts])
 
   const handlePostCreate = async (event: FormEvent) =>{
     event.preventDefault();
@@ -21,17 +33,19 @@ export function RoomGroupModal(props :RoomGroupModalProps){
     await axios.post(`http://localhost:3333/group/post/create`,{
       text: data.text,
       groupId: data.groupId,
-      ownerId: data.ownerId,
-      hourInit: data.hourInit,
-      hourEnd: data.hourEnd
+      ownerId: data.ownerId
     }).then(response => {
         const post = response.data;
+         setIsToPosts(post.id);
          console.log(post)
+         setIsRespOk(true)
+         setTimeout(function(){setIsRespOk(false)},1000)
          formEventGroup.reset()
     })
     
   } catch(err){
     console.log(err);
+    //props.setPlayer(undefined);
     alert('Erro ao tentar logar!')
   }
 }
@@ -67,8 +81,6 @@ export function RoomGroupModal(props :RoomGroupModalProps){
               <p className='card-text'><span className="h6">Game: </span>{groupCard.game.title}</p>
               <p className='card-text'><span className="h6">Players: </span>{groupCard.totalPlayersOnline+" / "+groupCard.maxPlayers}</p>
               <p className='card-text'><span className="h6">Owner: </span>{groupCard.owner.name}</p>
-              <p className='card-text'><span className="h6">Hora Ínicio: </span>{groupCard.hourInit}</p>
-              <p className='card-text'><span className="h6">Hora Fim: </span>{groupCard.hourEnd}</p>
               <p className='card-text mt-3 mb-3'><span className="h6">Dias de Jogos: </span></p>
               <ToggleGroup.Root 
               type='multiple' 
@@ -119,12 +131,7 @@ export function RoomGroupModal(props :RoomGroupModalProps){
                   S
                   </ToggleGroup.Item>
                 </ToggleGroup.Root>
-                <p className={"card-text "+groupCard.mediaRatingStars}><span className="h6">Avaliação: </span></p>
-                <p className={"card-text "+groupCard.mediaRatingStars}><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
-                <p className={"card-text "+groupCard.mediaRatingStars}><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
-                <p className={"card-text "+groupCard.mediaRatingStars}><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
-                <p className={"card-text "+groupCard.mediaRatingStars}><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
-                <p className={"card-text "+groupCard.mediaRatingStars}><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>          
+                <p className={"card-text "+groupCard.mediaRatingStars}><span className="h6">Avaliação: </span><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
               </div>    
           </div>
           <div className='col-6'>            
@@ -132,12 +139,7 @@ export function RoomGroupModal(props :RoomGroupModalProps){
             <div className='card-body pl-1'>
               <p className='card-text'><span className="h6">Nome: </span>{groupCard.owner.name}</p>
               <p className='card-text'><span className="h6">Username: </span>{groupCard.owner.username}</p>
-              <p className={"my-2 card-text "+groupCard.mediaRatingStars}><span className="h6">Avaliação: </span></p>
-              <p className={"my-2 card-text "+groupCard.mediaRatingStars}><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
-              <p className={"my-2 card-text "+groupCard.mediaRatingStars}><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
-              <p className={"my-2 card-text "+groupCard.mediaRatingStars}><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
-              <p className={"my-2 card-text "+groupCard.mediaRatingStars}><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
-              <p className={"my-2 card-text "+groupCard.mediaRatingStars}><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
+              <p className={"my-2 card-text "+groupCard.mediaRatingStars}><span className="h6">Avaliação: </span><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><em className='card-text float-right pr-3'>Votos: {groupCard.totalRatingStars}</em></p>
             </div>
             <h3 className='card-title h5 mt-3 mb-0 text-left'>Adicionar Post ao Feed</h3>
             <form onSubmit={handlePostCreate} className='mt-3 flex flex-col gap-3'>
@@ -146,7 +148,7 @@ export function RoomGroupModal(props :RoomGroupModalProps){
                 <div className='flex flex-col gap-2 inputEspecial'>
                   <label htmlFor='text'><b>Mensagem</b></label>
                   <Input id='text' name='text' placeholder='Digite sua Mensagem' />
-                  <em className='respMsgPost d-none'>Mensagem enviada com sucesso!</em>
+                  <em class='respMsgPost' className={(!isRespOk)?'d-none':''}>Mensagem enviada com sucesso!</em>
                 </div>
                 <footer className='mt-0 flex justify-end'>
                   <button 
@@ -161,10 +163,16 @@ export function RoomGroupModal(props :RoomGroupModalProps){
         </div>
         <div className='row mt-4'>
           <div className='col-6'>
-            <h3 className='card-title h5 mb-0 text-left'>Players no Grupo</h3>
+            <h3 className='card-title h5 mb-3 text-left'>Players no Grupo</h3>
+            { totalPlayersApp.map(player => {
+              return <p key={player.id} className={(playersNaSalaArray?.indexOf(player.id.toString())==-1)?'d-none':''}><i className="bi bi-person-circle pr-2"></i> {player.name} ({player.username})</p>
+              })}
           </div>
           <div className='col-6'>
-            <h3 className='card-title h5 mb-0 text-left'>Posts do Grupo</h3>
+            <h3 className='card-title h5 mb-3 text-left'>Posts do Grupo</h3>
+            { getPostsOnGroup.map(post => {
+              return <p key={post.id}><i className="bi bi-postcard pr-2"></i> {post.owner.name}<br></br><em>{post.text}</em> </p>
+              })}
           </div>
         </div>
         <div className='row mt-5'>
@@ -172,7 +180,8 @@ export function RoomGroupModal(props :RoomGroupModalProps){
             <Dialog.Close type='button' className='bg-fuchsia-900 hover:bg-fuchsia-600 px-5 h-12 rounded-md font-semibold'>Sair</Dialog.Close>
           </div>
         </div>
-        
+
+
     </Dialog.Content>
   </Dialog.Portal>
   )

@@ -105,6 +105,38 @@ app.post('/player/logar', async(request, response) => {
         return response.status(201).json(player);
 })
 
+app.post('/player/logar', async(request, response) => {
+    const body = request.body;
+    const player = await prisma.player.findMany({
+        select:{
+            id:true,
+            name: true,
+            username: true,
+        },
+        where:{
+            AND: [
+                {
+                    username: {
+                    equals: body.username,
+                },
+                },
+                {
+                    password: {
+                    equals: body.password,
+                },
+                },
+          ],
+        },
+        
+    })
+
+
+    
+    if(player.length == 0)
+        return response.status(403).json(player);
+    else 
+        return response.status(201).json(player);
+})
 //criar grupo
 app.post('/games/:id/groups', async(request, response) => {
     const idGame = parseInt(request.params.id);
@@ -130,9 +162,68 @@ app.post('/games/:id/groups', async(request, response) => {
     return response.status(201).json(group);
 })
 
+app.get('/group/players/list', async (request, response) => {
+    
+    const body = request.body;
+
+    const  players = await prisma.player.findMany({
+        select:{
+            id: true,
+            name: true,
+            username: true
+        },
+        orderBy:{
+            name: 'asc',
+        }
+    })
+    return response.json(players/*.map(player => {
+        let ratingStarsArray = player.ratingStars.split(',');
+        let playersArray = player.players.split(',');
+        let totalRating = ratingStarsArray.reduce((accumulator,value) => accumulator + parseInt(value),0);
+        
+        let mediaRating = convertRatingStars(arrayParaObjeto(ratingStarsArray));
+
+        return {
+            ...player,
+            ratingStars: ratingStarsArray,
+            totalRatingStars: totalRating,
+            mediaRatingStars: mediaRating,
+            totalPlayersOnline: playersArray.length
+        }
+    })*/
+    )
+});
+
+app.get('/group/posts/list/:id', async (request, response) => {
+
+    const idGroup = parseInt(request.params.id);
+
+    const  posts = await prisma.post.findMany({
+        select:{
+            id: true,
+            text: true,
+            owner: {
+                select:{
+                    name: true,
+                    username: true,
+                }
+            }
+        },
+        where:{
+            groupId: idGroup
+        },
+        orderBy:{
+            createdDate: 'desc',
+        }
+    })
+
+    return response.json(posts);
+})
 
 //listar grupos para jogo especifico
 app.get('/groups/list', async (request, response) => {
+
+
 
     const  groups = await prisma.group.findMany({
         select:{

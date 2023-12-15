@@ -41,6 +41,7 @@ export interface GroupCard{
 export interface RoomGroupModalProps{
   playerLogado: Player|undefined;
   groupCard: GroupCard | null;
+  totalPlayersApp: Player[];
 }
 
 export interface CardProps{
@@ -54,6 +55,7 @@ export interface GroupCardProps {
   setReloadCards: (param: boolean) => void | null;
   groupCard: GroupCard | null;
   playerLogado: Player|undefined;
+  totalPlayersApp: Player[];
 }
 
 export interface PlayerCardProps {
@@ -64,6 +66,14 @@ export interface Player {
   id: number;
   name: string;
   username: string;
+}
+
+export interface Post {
+  id: number;
+  text: string;
+  groupId: number;
+  ownerId: number;
+  owner: Player;
 }
 
 function loginTop(player: Player|undefined, setPlayer: (param: Player|undefined) => void , titleModalPlayer: string, setTitleModalPlayer: (param: string) => void ) {
@@ -107,6 +117,21 @@ export function Home(){
   const [player, setPlayer] = useState<Player|undefined>(undefined);
   const [titleModalPlayer, setTitleModalPlayer] = useState('Novo Player');
   const [open, setOpen] = useState(false);
+  const [totalPlayersApp, setTotalPlayersApp] = useState<Player[]>([]);
+
+  useEffect(()=>{
+      axios('http://localhost:3333/group/players/list').then(response => {
+        console.log(response.data)
+        setTotalPlayersApp(response.data)
+        // const arrayPlayers = response.data
+        // const playersNaSalaArray = groupCard?.players.split(',') || []
+        // let playersObjNaSala: Player[];
+        // if(playersNaSalaArray!=null && playersNaSalaArray != undefined) arrayPlayers.forEach((element: Player) => {
+        //  if(playersNaSalaArray.indexOf(element.id.toString()) != -1) 
+        //   getPlayersOnGroup.push(element)          
+        // });
+      })
+  },[])
 
   useEffect(()=>{
     axios('http://localhost:3333/games').then(response => {
@@ -161,8 +186,8 @@ export function Home(){
       </div>
     
       <Dialog.Root>
-        <CreateGroupModal setReloadCards={setReloadCards} groupCard={null} playerLogado={player} />
-        <CreateGroupAd playerLogado={player} setReloadCards={setOpen} groupCard={null}/>
+        <CreateGroupModal setReloadCards={setReloadCards} groupCard={null} playerLogado={player} totalPlayersApp={totalPlayersApp} />
+        <CreateGroupAd playerLogado={player} setReloadCards={setOpen} groupCard={null} totalPlayersApp={totalPlayersApp} />
       </Dialog.Root>
 
         <div className="row mx-auto px-0">
@@ -170,12 +195,13 @@ export function Home(){
             groupCards.map(group => { //console.log(group )
               return(
                 <Dialog.Root>
-                  <RoomGroupModal playerLogado={player} groupCard={group} />
+                  <RoomGroupModal playerLogado={player} groupCard={group} totalPlayersApp={totalPlayersApp}/>
                   <GroupCards
                     key={group.id}
                     groupCard={group}
                     setReloadCards={()=>{return}}
                     playerLogado={player}
+                    totalPlayersApp={totalPlayersApp} 
                     />
                 </Dialog.Root>)
             })
